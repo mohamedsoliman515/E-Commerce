@@ -1,65 +1,23 @@
-import { useForm, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { signUpSchema, signUpType } from "@validations/SignUpSchema";
-import useCheckEmailAvailability from "@hooks/useCheckEmailAvailability";
+import { Navigate } from "react-router-dom";
 import { Heading } from "@components/common";
 import { Input } from "@components/Form";
 import { Form, Button, Row, Col, Spinner } from "react-bootstrap";
-import { useAppDispatch, useAppSelector } from "@store/hooks";
-import { actAuthRegister, resetUI } from "@store/auth/authSlice";
-import { Navigate, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import useRegister from "@hooks/useRegister";
 const Register = () => {
-  const dispatch = useAppDispatch();
-  const navigate=useNavigate()
-  const { loading, error, accessToken } = useAppSelector((state) => state.auth);
-  const {
-    register,
-    handleSubmit,
-    getFieldState,
-    trigger,
-    formState: { errors },
-  } = useForm<signUpType>({
-    mode: "onBlur",
-    resolver: zodResolver(signUpSchema),
-  });
-
-  const submitForm: SubmitHandler<signUpType> = (data) => {
-    const { firstName, lastName, email, password } = data;
-    dispatch(actAuthRegister({ firstName, lastName, email, password })).unwrap().then(()=>{
-      navigate("/login?message=account_created")
-    })
-  };
-
-  const {
-    emailAvailabilityStatus,
-    enteredEmail,
-    checkEmailAvailability,
-    resetCheckEmailAvailability,
-  } = useCheckEmailAvailability();
-
-  const emailOnBlurHandler = async (e: React.FocusEvent<HTMLInputElement>) => {
-    await trigger("email");
-    const value = e.target.value;
-    const { isDirty, invalid } = getFieldState("email");
-
-    if (isDirty && !invalid && enteredEmail !== value) {
-      // checking
-      checkEmailAvailability(value);
-    }
-
-    if (isDirty && invalid && enteredEmail) {
-      resetCheckEmailAvailability();
-    }
-  };
-  useEffect(() => {
-    return () => {
-      dispatch(resetUI());
-    };
-  }, [dispatch]);
-    if (accessToken) {
-      return <Navigate to="/"/>
-    }
+const {
+  loading,
+  error,
+  accessToken,
+  emailOnBlurHandler,
+  emailAvailabilityStatus,
+  submitForm,
+  register,
+  handleSubmit,
+  formErrors,
+} = useRegister();
+  if (accessToken) {
+    return <Navigate to="/" />;
+  }
   return (
     <>
       <Heading title="User Registration" />
@@ -70,13 +28,13 @@ const Register = () => {
               label="First Name"
               name="firstName"
               register={register}
-              error={errors.firstName?.message}
+              error={formErrors.firstName?.message}
             />
             <Input
               label="Last Name"
               name="lastName"
               register={register}
-              error={errors.lastName?.message}
+              error={formErrors.lastName?.message}
             />
             <Input
               label="Email Address"
@@ -84,8 +42,8 @@ const Register = () => {
               register={register}
               onBlur={emailOnBlurHandler}
               error={
-                errors.email?.message
-                  ? errors.email?.message
+                formErrors.email?.message
+                  ? formErrors.email?.message
                   : emailAvailabilityStatus === "notAvailable"
                   ? "This email is already in use."
                   : emailAvailabilityStatus === "failed"
@@ -109,14 +67,14 @@ const Register = () => {
               label="Password"
               name="password"
               register={register}
-              error={errors.password?.message}
+              error={formErrors.password?.message}
             />
             <Input
               type="password"
               label="Confirm Password"
               name="confirmPassword"
               register={register}
-              error={errors.confirmPassword?.message}
+              error={formErrors.confirmPassword?.message}
             />
             <Button
               variant="info"

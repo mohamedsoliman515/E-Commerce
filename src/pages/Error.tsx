@@ -5,17 +5,21 @@ import notFound from "../assets/lottieFiles/notFound.json";
 import empty from "../assets/lottieFiles/empty.json";
 import error from "../assets/lottieFiles/error.json";
 import loading from "../assets/lottieFiles/loading.json";
+import success from "../assets/lottieFiles/success.json";
 const lottieFilesMap = {
   notFound,
   empty,
   loading,
   error,
+  success,
 };
 type lottieProps = {
   type: keyof typeof lottieFilesMap;
   message?: string;
 };
+
 function Error({ type, message }: lottieProps) {
+  
   const lottie = lottieFilesMap[type];
   return (
     <Container

@@ -1,2 +1,3 @@
 import MainLayout from "./MainLayout/MainLayout";
-export { MainLayout }
+import ProfileLayout from "./ProfileLayout/ProfileLayout";
+export { MainLayout, ProfileLayout }

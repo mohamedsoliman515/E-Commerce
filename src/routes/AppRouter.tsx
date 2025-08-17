@@ -6,6 +6,10 @@ import { PageSuspenseFallBack } from "@components/feedBack";
 // pages
 
 const MainLayout = lazy(() => import("@layouts/MainLayout/MainLayout"));
+const ProfileLayout = lazy(
+  () => import("@layouts/ProfileLayout/ProfileLayout")
+);
+
 const Home = lazy(() => import("@pages/Home"));
 const Cart = lazy(() => import("@pages/Cart"));
 const Wishlist = lazy(() => import("@pages/Wishlist"));
@@ -14,7 +18,10 @@ const Categories = lazy(() => import("@pages/Categories"));
 const Products = lazy(() => import("@pages/Products"));
 const Login = lazy(() => import("@pages/Login"));
 const Register = lazy(() => import("@pages/Register"));
-const Profile = lazy(() => import("@pages/Profile"));
+const Account = lazy(() => import("@pages/Account"));
+const Orders = lazy(() => import("@pages/Orders"));
+
+
 import Error from "@pages/Error";
 // protected routes
 import ProtectedRoute from "@components/Auth/ProtectedRoute";
@@ -108,15 +115,34 @@ const router = createBrowserRouter([
           </PageSuspenseFallBack>
         ),
       },
+      // <ProtectedRoute>  i don't need protect children because parent (<ProfileLayout />) protected then all children will be protected
       {
         path: "profile",
         element: (
           <ProtectedRoute>
             <PageSuspenseFallBack>
-              <Profile />
+              <ProfileLayout />
             </PageSuspenseFallBack>
           </ProtectedRoute>
         ),
+        children: [
+          {
+            index: true,
+            element: (
+              <PageSuspenseFallBack>
+                <Account />
+              </PageSuspenseFallBack>
+            ),
+          },
+          {
+            path: "orders",
+            element: (
+              <PageSuspenseFallBack>
+                <Orders />
+              </PageSuspenseFallBack>
+            ),
+          },
+        ],
       },
     ],
   },
@@ -126,116 +152,4 @@ const AppRouter = () => {
 };
 
 export default AppRouter;
-// import { Suspense, lazy } from "react";
-// import { createBrowserRouter, RouterProvider } from "react-router-dom";
-// import { MainLayout } from "@layouts/index";
 
-// // Lazy-loaded pages
-// const Home = lazy(() => import("@pages/Home"));
-// const Cart = lazy(() => import("@pages/Cart"));
-// const Wishlist = lazy(() => import("@pages/Wishlist"));
-// const AboutUs = lazy(() => import("@pages/AboutUs"));
-// const Categories = lazy(() => import("@pages/Categories"));
-// const Products = lazy(() => import("@pages/Products"));
-// const Login = lazy(() => import("@pages/Login"));
-// const Register = lazy(() => import("@pages/Register"));
-// const Error = lazy(() => import("@pages/Error"));
-
-// // Helper fallback
-// const loading = <div>Loading, please wait...</div>;
-
-// const router = createBrowserRouter([
-//   {
-//     path: "/",
-//     element: <MainLayout />,
-//     errorElement: (
-//       <Suspense fallback={loading}>
-//         <Error />
-//       </Suspense>
-//     ),
-//     children: [
-//       {
-//         index: true,
-//         element: (
-//           <Suspense fallback={loading}>
-//             <Home />
-//           </Suspense>
-//         ),
-//       },
-//       {
-//         path: "about-us",
-//         element: (
-//           <Suspense fallback={loading}>
-//             <AboutUs />
-//           </Suspense>
-//         ),
-//       },
-//       {
-//         path: "cart",
-//         element: (
-//           <Suspense fallback={loading}>
-//             <Cart />
-//           </Suspense>
-//         ),
-//       },
-//       {
-//         path: "wishlist",
-//         element: (
-//           <Suspense fallback={loading}>
-//             <Wishlist />
-//           </Suspense>
-//         ),
-//       },
-//       {
-//         path: "categories",
-//         element: (
-//           <Suspense fallback={loading}>
-//             <Categories />
-//           </Suspense>
-//         ),
-//       },
-//       {
-//         path: "categories/products/:prefix",
-//         element: (
-//           <Suspense fallback={loading}>
-//             <Products />
-//           </Suspense>
-//         ),
-//         loader: ({ params }) => {
-//           if (
-//             typeof params.prefix !== "string" ||
-//             !/^[a-z]+$/i.test(params.prefix)
-//           ) {
-//             throw new Response("Bad Request", {
-//               statusText: "Products of this Category not found",
-//               status: 400,
-//             });
-//           }
-//           return true;
-//         },
-//       },
-//       {
-//         path: "login",
-//         element: (
-//           <Suspense fallback={loading}>
-//             <Login />
-//           </Suspense>
-//         ),
-//       },
-//       {
-//         path: "register",
-//         element: (
-//           <Suspense fallback={loading}>
-//             <Register />
-//           </Suspense>
-//         ),
-//       },
-//     ],
-//   },
-// ]);
-
-// const AppRouter = () => {
-//   return <RouterProvider router={router} />;
-// };
-
-// export default AppRouter;

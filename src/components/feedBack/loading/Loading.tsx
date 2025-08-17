@@ -1,9 +1,5 @@
 import { TLoading } from "@customTypes/shared.types";
-// import {
-//   CategorySkeleton,
-//   CartSkeleton,
-//   ProductSkeleton,
-// } from "@components/feedBack";
+
 import CategorySkeleton from "../skeletons/CategorySkeleton/CategorySkeleton";
 import CartSkeleton from "../skeletons/CartSkeleton/CartSkeleton";
 import ProductSkeleton from "../skeletons/ProductSkeleton/ProductSkeleton";
@@ -28,10 +24,13 @@ const Loading = ({
   children,
   type = "category",
 }: LoadingProps) => {
+
   const ComponentSkeleton = SkeletonTypes[type];
+
   if (status === "pending") {
     return <ComponentSkeleton />;
   }
+
   if (status === "failed") {
     return (
       <div>
@@ -39,7 +38,9 @@ const Loading = ({
       </div>
     );
   }
+
   return <div>{children}</div>;
+  
 };
 
 export default Loading;

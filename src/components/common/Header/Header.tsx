@@ -4,6 +4,9 @@ import { NavLink } from "react-router-dom";
 import HeaderLeftBar from "./headerLeftBar/HeaderLeftBar";
 import styles from "./styles.module.css";
 import { authLogout } from "@store/auth/authSlice";
+import { useEffect } from "react";
+import { actGetWishlist } from "@store/wishlist/wishlistSlice";
+
 const { headerContainer, headerLogo } = styles;
 
 function Header() {
@@ -11,6 +14,13 @@ function Header() {
   const { accessToken, user } = useAppSelector((state) => {
     return state.auth;
   });
+
+  useEffect(() => {
+    if (accessToken) {
+      dispatch(actGetWishlist("ProductIds"));
+    }
+  }, [dispatch, accessToken]);
+
   return (
     <header>
       <div className={headerContainer}>
@@ -57,10 +67,10 @@ function Header() {
                     title={`welcome : ${user?.firstName}`}
                     id="basic-nav-dropdown"
                   >
-                    <NavDropdown.Item as={NavLink} to="/profile">
+                    <NavDropdown.Item as={NavLink} to="profile" end>
                       Profile
                     </NavDropdown.Item>
-                    <NavDropdown.Item as={NavLink} to="/orders">
+                    <NavDropdown.Item as={NavLink} to="profile/orders">
                       Orders
                     </NavDropdown.Item>
                     <NavDropdown.Divider />
