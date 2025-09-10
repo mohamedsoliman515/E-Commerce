@@ -1,8 +1,9 @@
-
 const AboutUs = () => {
   return (
-    <div>AboutUs</div>
-  )
-}
+    <div className=" d-flex align-items-center justify-content-center flex-column">
 
-export default AboutUs
+    </div>
+  );
+};
+
+export default AboutUs;

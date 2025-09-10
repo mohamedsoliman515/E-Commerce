@@ -1,8 +1,6 @@
 import { Suspense, lazy } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { PageSuspenseFallBack } from "@components/feedBack";
-
-// const HomePage = lazy(() => import("./pages/HomePage"));
 // pages
 
 const MainLayout = lazy(() => import("@layouts/MainLayout/MainLayout"));
